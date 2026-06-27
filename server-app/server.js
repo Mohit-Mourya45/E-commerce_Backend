@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 9090 ;
@@ -29,7 +31,6 @@ app.use("/bill",billRoute);
 app.use("/sales", saleRoute);
 app.use("/paymentdetails",paymentdetailsRoute);
 app.use("/payment",paymentRoute);
-require('dotenv').config();
 
 mongoose.connect(process.env.MONGODB_URL)
 .then(() => {
@@ -39,6 +40,9 @@ mongoose.connect(process.env.MONGODB_URL)
     console.log("Database connection error:", err);
 });
 
+app.get("/", (req, res) => {
+    res.send("Backend API is running successfully 🚀");
+});
 app.listen(PORT,function() {
     console.log('Server is running on PORT: ',PORT);
 });
