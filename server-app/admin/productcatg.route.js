@@ -1,6 +1,7 @@
 const express = require ('express');
 const productcatgRoute = express.Router();
 var ProductCatg = require('./productcatg.model');
+ console.log("Schema Loaded:", ProductCatg.schema.obj);
 
 //save product category
 productcatgRoute.route('/addproductcatg').post( (req , res) =>{
