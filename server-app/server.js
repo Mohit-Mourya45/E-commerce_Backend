@@ -52,6 +52,4 @@ mongoose.connect(process.env.MONGODB_URL)
 app.get("/", (req, res) => {
     res.send("Backend API is running successfully 🚀");
 });
-app.listen(PORT,function() {
-    console.log('Server is running on PORT: ',PORT);
-});
+module.exports = app;
