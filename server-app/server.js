@@ -18,18 +18,9 @@ const saleRoute = require('./vendor/sales.route.js');
 const paymentdetailsRoute = require('./admin/bills/paymentdetails.route.js');
 const paymentRoute = require('./payment.js')
 
-app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://e-commerce-frontend-sage-one.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-
-}));
-app.options("*", cors());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
+app.use(cors());
 app.use('/state',stateRoute);
 app.use('/city',cityRoute);
 app.use('/productcatg' , productcatgRoute);
@@ -52,4 +43,6 @@ mongoose.connect(process.env.MONGODB_URL)
 app.get("/", (req, res) => {
     res.send("Backend API is running successfully 🚀");
 });
-module.exports = app;
+app.listen(PORT,function() {
+    console.log('Server is running on PORT: ',PORT);
+});
