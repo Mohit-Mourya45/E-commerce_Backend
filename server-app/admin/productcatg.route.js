@@ -1,48 +1,79 @@
-const express = require ('express');
+const express = require('express');
 const productcatgRoute = express.Router();
-var ProductCatg = require('./productcatg.model');
- console.log("Schema Loaded:", ProductCatg.schema.obj);
+const ProductCatg = require('./productcatg.model');
 
-//save product category
-productcatgRoute.route('/addproductcatg').post( (req , res) =>{
-     console.log("body", req.body);
-    var productcatg=new ProductCatg({ pcatgid: req.body.pcatgid,pcatgname:req.body.pcatgname,status: req.body.status});
-     
+console.log("Schema Loaded:", ProductCatg.schema.obj);
 
-    productcatg.save().then(data => {
-        res.json(data);
-    }).catch(err => {
-        console.log("Error:", err);
-        res.send(err);
-        res.end();
-    });
+/* ================= SAVE PRODUCT CATEGORY ================= */
+
+productcatgRoute.post('/addproductcatg', async (req, res) => {
+    try {
+        console.log("Body:", req.body);
+
+        const productcatg = new ProductCatg({
+            pcatgid: req.body.pcatgid,
+            pcatgname: req.body.pcatgname,
+            status: req.body.status
+        });
+
+        const data = await productcatg.save();
+
+        res.status(201).json(data);
+    }
+    catch (err) {
+        console.log("Add Category Error:", err);
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
 });
-//show all product category 
-productcatgRoute.route
-('/showproductcatg').
-get(function ( req,res) {
-    ProductCatg.find()
-    .then(productcatg => {
-        res.send(productcatg);
-        res.end();
-    })
-    .catch(err => {
-        res.send("Data not found somethinf went wrong");
-        res.end();
-    });
+
+
+/* ================= SHOW ALL PRODUCT CATEGORIES ================= */
+
+productcatgRoute.get('/showproductcatg', async (req, res) => {
+    try {
+        const productcatg = await ProductCatg.find();
+
+        res.status(200).json(productcatg);
+    }
+    catch (err) {
+        console.log("Show Category Error:", err);
+
+        // Always return an array to avoid React crashes
+        res.status(500).json([]);
+    }
 });
-//update product catg
-productcatgRoute.route
-('/updateproductcatg/:pcatgid').
-put(function ( req, res) {
-    ProductCatg.updateOne({pcatgid:req.params.pcatgid},
-        {pcatgname:req.body.pcatgname,status:req.body.status}
-    ).then(()=> {
-        res.send('product category added successfully');
-        res.end();
-    }).catch(err => {
-        res.send(err);
-        res.end();
-    });
+
+
+/* ================= UPDATE PRODUCT CATEGORY ================= */
+
+productcatgRoute.put('/updateproductcatg/:pcatgid', async (req, res) => {
+    try {
+        await ProductCatg.updateOne(
+            { pcatgid: req.params.pcatgid },
+            {
+                $set: {
+                    pcatgname: req.body.pcatgname,
+                    status: req.body.status
+                }
+            }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "Product category updated successfully"
+        });
+    }
+    catch (err) {
+        console.log("Update Category Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
 });
-module.exports= productcatgRoute;  
+
+module.exports = productcatgRoute;
