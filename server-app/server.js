@@ -18,9 +18,15 @@ const saleRoute = require('./vendor/sales.route.js');
 const paymentdetailsRoute = require('./admin/bills/paymentdetails.route.js');
 const paymentRoute = require('./payment.js')
 
+app.use(cors({
+    origin: [
+        "http://localhost:3000",
+        "https://e-commerce-backend-pi-black.vercel.app"
+    ],
+    credentials: true
+}));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
-app.use(cors());
 app.use('/state',stateRoute);
 app.use('/city',cityRoute);
 app.use('/productcatg' , productcatgRoute);
